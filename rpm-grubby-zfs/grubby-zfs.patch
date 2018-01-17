@@ -1,0 +1,72 @@
+--- grubby.spec	2017-08-01 04:41:25.000000000 +0100
++++ grubby-zfs.spec	2017-08-24 20:30:58.800169525 +0100
+@@ -1,12 +1,15 @@
+-Name: grubby
++%global aname grubby
++
++Name: grubby-zfs
+ Version: 8.28
+ Release: 23%{?dist}
+ Summary: Command line tool for updating bootloader configs
+ Group: System Environment/Base
+ License: GPLv2+
+ URL: http://git.fedorahosted.org/git/grubby.git
+-Source0: https://git.fedorahosted.org/cgit/grubby.git/snapshot/%{name}-%{version}-1.tar.bz2
++Source0: https://git.fedorahosted.org/cgit/grubby.git/snapshot/%{aname}-%{version}-1.tar.bz2
+ Source1: prune_debug
++Source2: https://raw.githubusercontent.com/Rudd-O/zfs-fedora-installer/master/grub-zfs-fixer/fix-grub-mkconfig
+ Patch0001: 0001-Only-set-RPM_OPT_FLAGS-if-undefined.patch
+ Patch0002: 0002-If-we-re-using-multiboot-add-a-new-mbmodule-not-an-i.patch
+ Patch0003: 0003-Use-PREFIX-during-make-install.patch
+@@ -97,7 +100,12 @@
+ %ifarch %{arm}
+ Requires: uboot-tools
+ %endif
+-Requires: system-release
++Requires: system-release python gawk coreutils grub2-tools
++
++Obsoletes: %{aname}
++Conflicts: %{aname}
++
++Provides:  %{aname} = %{version}-%{release}
+ 
+ %description
+ grubby  is  a command line tool for updating and displaying information about 
+@@ -107,7 +115,7 @@
+ environment.
+ 
+ %prep
+-%setup -q -n %{name}-%{version}-1
++%setup -q -n %{aname}-%{version}-1
+ 
+ git init
+ git config user.email "noone@example.com"
+@@ -136,16 +144,28 @@
+ mkdir -p $RPM_BUILD_ROOT/boot
+ echo " " >> $RPM_BUILD_ROOT/boot/boot.scr
+ %endif
++mkdir -p $RPM_BUILD_ROOT/usr/sbin/
++install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/usr/sbin/
+ 
+ %clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ %post
+ /usr/libexec/grubby/prune_debug
++if [ -f %{_prefix}/sbin/grub2-mkconfig ] ; then
++    /usr/sbin/fix-grub-mkconfig
++fi
++
++%triggerin -- grub2-tools
++%{_prefix}/sbin/fix-grub-mkconfig
++
++%triggerun -- grub2-tools
++rm -f %{_prefix}/sbin/grub2-mkconfig.bak
+ 
+ %files
+ %defattr(-,root,root,-)
+ %doc COPYING
++%{_prefix}/sbin/fix-grub-mkconfig
+ %{_prefix}/sbin/installkernel
+ %{_prefix}/sbin/new-kernel-pkg
+ %{_prefix}/sbin/grubby

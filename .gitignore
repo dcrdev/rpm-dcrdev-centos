@@ -1,0 +1,5 @@
+*.tar.gz
+*.src.rpm
+*.rpm
+build.sh
+build2.sh

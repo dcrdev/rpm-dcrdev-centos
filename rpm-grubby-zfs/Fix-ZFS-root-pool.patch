@@ -1,0 +1,25 @@
+From: Rick Warner <rick@microway.com>
+Date: Fri, 1 Apr 2016 00:00:00 -0400
+Subject: [PATCH 1/1] Preserve Kernel commandline if root=ZFS
+
+Should just be included upstream.
+
+Related: rhbz#1410591
+Signed-off-by: Dominic Robinson <github@dcrdev.com>
+---
+diff -aurN a/grubby.c b/grubby.c
+--- a/grubby.c	2016-04-01 16:32:07.059277458 -0400
++++ b/grubby.c	2016-04-01 16:32:37.731958756 -0400
+@@ -2252,6 +2252,12 @@
+ 		}
+ 	}
+ 
++	// If running on ZFS do nothing
++        if(strncasecmp(dev, "ZFS", 3)==0) {
++		notSuitablePrintf(entry, 1, "\n");
++		return 1;
++	}
++
+ 	dev = getpathbyspec(dev);
+ 	if (!getpathbyspec(dev)) {
+ 		notSuitablePrintf(entry, 0, "can't find blkid entry for %s\n",
