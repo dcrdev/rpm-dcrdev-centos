@@ -20,8 +20,3 @@ To build the package, I reccomend using the [Brimstone](https://github.com/dcrde
 
 ### Issues
 The script amongst other things downloads all the sources for you: the CentOS package source, grubby and all patches. In order to download grubby the script is intended to parse Source0 from the spec file, unfortunately the CentOS package has an invalid url. For now I'm including the grubby tarball in this repo - but as and when this is fixed, you can just uncomment lines 88-90.
-
-# Feel Like Buying Me Some Jack Daniels™ ?
-```
-bitcoin:1GkJDZi2zNh9P71cLwT4DiA1H9UVjxidyw
-```
