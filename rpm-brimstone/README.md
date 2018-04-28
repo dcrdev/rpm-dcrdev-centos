@@ -1,2 +1,2 @@
 # rpm-brimstone
-CentOS package for Brimstone
+Fedora package for Brimstone
