@@ -1,9 +1,9 @@
-%global commit 96fa329948b242e338ebc1dea23e4aaea59805f3
+%global commit 37735e60b294574613ac70c8aeed650b4845c225
 %global short_commit %(c=%{commit}; echo ${c:0:7})
-%global commit_date 20180428
+%global commit_date 20180430
 
 Name:           brimstone
-Version:        4
+Version:        5
 Release:        0.1.%{commit_date}git%{short_commit}%{?dist}
 Summary:        An automated rpm build and repository creation script based on mock
 
@@ -37,6 +37,8 @@ install -d -m755 \
 %{_bindir}/%{name}
 
 %changelog
+* Mon Apr 30 2018 Dominic Robinson <github@dcrdev.com> - 5-0.1.20180430git37735e6
+- Bump to version 5
 * Sat Apr 28 2018 Dominic Robinson <github@dcrdev.com> - 4-0.1.20180428git96fa329
 - Bump to version 4
 * Sat Jun 10 2017 Dominic Robinson <github@dcrdev.com> - 3-0.2.20170601git47c0b18
